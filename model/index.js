@@ -1,4 +1,4 @@
-const {Sequelize,DataTypes} = require("sequelize");
+const { Sequelize, DataTypes } = require("sequelize");
 
 const sequelize = new Sequelize(
   "eataway",
@@ -7,26 +7,35 @@ const sequelize = new Sequelize(
   {
     host: "localhost",
     dialect: "postgres",
-    logging:true,//for Showing Queries
+    logging: true, //for Showing Queries
     pool: { max: 5, min: 0, idl: 10000 },
   }
 );
 
 sequelize.authenticate().then(() => {
-    console.log('====================================');
-    console.log('Connected');
-    console.log('====================================');
+  console.log("====================================");
+  console.log("Connected");
+  console.log("====================================");
 });
 
-const db={}
-db.Sequelize=Sequelize
-db.sequelize=sequelize;
+const db = {};
+db.Sequelize = Sequelize;
+db.sequelize = sequelize;
 
-db.users=require('./Users')(sequelize,DataTypes)
-db.posts=require('./Post')(sequelize,DataTypes)
-db.users.hasMany(db.posts)
-db.posts.belongsTo(db.users)
-db.sequelize.sync({force:false}).then(res=>{
-  console.log('sync====');
-})
-module.exports=db;
+db.users = require("./Users")(sequelize, DataTypes);
+db.posts = require("./Post")(sequelize, DataTypes);
+db.tags = require("./Tags")(sequelize, DataTypes);
+db.post_tags = require("./PostTags")(sequelize, DataTypes, db.posts, db.tags);
+
+db.users.hasMany(db.posts);
+db.posts.belongsTo(db.users);
+
+// many TO May
+
+db.posts.belongsToMany(db.tags, { through: db.post_tags });
+db.tags.belongsToMany(db.posts, { through: db.post_tags });
+
+db.sequelize.sync({ force: false }).then((res) => {
+  console.log("sync====");
+});
+module.exports = db;

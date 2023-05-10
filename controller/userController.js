@@ -2,6 +2,8 @@ const db = require("../model");
 const CatchAsync = require("../utils/catcAsync");
 let Users = db.users;
 let Post = db.posts;
+let PostTags = db.post_tag;
+let Tags = db.tags;
 exports.createPost = CatchAsync(async (req, res, next) => {
   let data = await Post.create({
     name: "New Post",
@@ -45,6 +47,18 @@ exports.oneToMany = CatchAsync(async (req, res, next) => {
     ],
     where: { id: 2 },
   });
+  res.status(201).json({
+    status: "Success",
+    data,
+  });
+});
+exports.manyToMany = CatchAsync(async (req, res, next) => {
+      let data = await Tags.findAll({
+        include:{
+            attributes:['name','title'],
+            model:Post
+        }
+      });
   res.status(201).json({
     status: "Success",
     data,

@@ -1,6 +1,6 @@
 // const Otp = require("../model/otp");
 // const Fcm = require("../model/fcm");
-const {Sequelize,Op } = require("sequelize");
+const {Sequelize,Op, QueryTypes } = require("sequelize");
 const db = require("../model");
 const CatchAsync = require("../utils/catcAsync");
 // const jwt = require("jsonwebtoken");
@@ -222,7 +222,25 @@ exports.getUser = CatchAsync(async (req, res, next) => {
   //   // offset:1
 
   // });
-  const users = await Users.findAndCountAll({});
+  // const users = await Users.findAndCountAll({});
+  // const users = await db.sequelize.query('Select * from users',{
+  //   type:QueryTypes.SELECT,
+  //   model:Users,
+  //   mapToModel:true
+  // });
+  // const qType='IN(:gender)'
+  // const qType='LIKE :searchemail'
+  const qType='= $gender'
+  const users = await db.sequelize.query(`Select * from users where gender ${qType}`,{
+    // type:QueryTypes.SELECT,
+    // model:Users,
+    // mapToModel:true
+    // replacements:{gender:'male'}
+    // replacements:['male']
+    // replacements:{gender:['male','female']}
+    // replacements:{searchemail:'%@gmail.com'}
+    bind:{gender:'male'}
+  })
   res.status(201).json({
     status: "Success",
     users,

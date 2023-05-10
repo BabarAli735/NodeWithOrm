@@ -53,12 +53,12 @@ exports.oneToMany = CatchAsync(async (req, res, next) => {
   });
 });
 exports.manyToMany = CatchAsync(async (req, res, next) => {
-      let data = await Tags.findAll({
-        include:{
-            attributes:['name','title'],
-            model:Post
-        }
-      });
+  let data = await Tags.findAll({
+    include: {
+      attributes: ["name", "title"],
+      model: Post,
+    },
+  });
   res.status(201).json({
     status: "Success",
     data,
@@ -75,5 +75,12 @@ exports.oneBelongTo = CatchAsync(async (req, res, next) => {
   res.status(201).json({
     status: "Success",
     data,
+  });
+});
+exports.CheckActiveUserScope = CatchAsync(async (req, res, next) => {
+  let data = await Post.findAll({});
+  res.status(201).json({
+    status: "Success",
+    data
   });
 });

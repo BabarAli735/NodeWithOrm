@@ -34,6 +34,22 @@ exports.oneToone = CatchAsync(async (req, res, next) => {
     data,
   });
 });
+exports.oneToMany = CatchAsync(async (req, res, next) => {
+  let data = await Users.findAll({
+    attributes: ["name", "email"],
+    include: [
+      {
+        model: Post,
+        attributes: [["name", "PostName"], "title"],
+      },
+    ],
+    where: { id: 2 },
+  });
+  res.status(201).json({
+    status: "Success",
+    data,
+  });
+});
 exports.oneBelongTo = CatchAsync(async (req, res, next) => {
   let data = await Post.findAll({
     include: [

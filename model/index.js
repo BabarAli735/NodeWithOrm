@@ -24,7 +24,7 @@ db.sequelize=sequelize;
 
 db.users=require('./Users')(sequelize,DataTypes)
 db.posts=require('./Post')(sequelize,DataTypes)
-db.users.hasOne(db.posts)
+db.users.hasMany(db.posts)
 db.posts.belongsTo(db.users)
 db.sequelize.sync({force:false}).then(res=>{
   console.log('sync====');

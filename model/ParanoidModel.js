@@ -8,11 +8,8 @@ module.exports = (sequelize, DataTypes) => {
       userId: DataTypes.INTEGER,
     },
     {
-      sequelize,
-    //   paranoid: true,
-
-      // If you want to give a custom name to the deletedAt column
-      deletedAt: "destroyTime",
+      paranoid: true,
+      deletedAt: "softDelete",
     }
   );
   return ParanoidTable;

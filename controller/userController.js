@@ -4,10 +4,10 @@ let Users = db.users;
 let Post = db.posts;
 let PostTags = db.post_tags;
 let Tags = db.tags;
-let Comments=db.comments
-let Image=db.image
-let Video=db.video
-let ParanoidTable=db.paranoidTable
+let Comments = db.comments;
+let Image = db.image;
+let Video = db.video;
+let ParanoidTable = db.paranoidTable;
 exports.createPost = CatchAsync(async (req, res, next) => {
   let data = await Post.create({
     name: "New Post",
@@ -85,7 +85,7 @@ exports.CheckActiveUserScope = CatchAsync(async (req, res, next) => {
   let data = await Post.findAll({});
   res.status(201).json({
     status: "Success",
-    data
+    data,
   });
 });
 exports.Polymorphic = CatchAsync(async (req, res, next) => {
@@ -97,19 +97,18 @@ exports.Polymorphic = CatchAsync(async (req, res, next) => {
   //   console.log(message, comment.commentable.toJSON());
   // }
 
-  const videoData=await Video.findAll({
-    include:[Comments]
-  })
+  const videoData = await Video.findAll({
+    include: [Comments],
+  });
   // const imageData=await Image.findAll({
   //   include:[Comments]
   // })
   res.status(201).json({
     status: "Success",
-    videoData
+    videoData,
   });
 });
 exports.PolymorphicMany = CatchAsync(async (req, res, next) => {
- 
   // Image to Tag -------
   // let Data=await Image.findAll({
   //   include:[Tags]
@@ -123,45 +122,60 @@ exports.PolymorphicMany = CatchAsync(async (req, res, next) => {
   //   include:[Image]
   // })
   // Tag to Video -------
-  let Data=await Tags.findAll({
-    include:[Video]
-  })
+  let Data = await Tags.findAll({
+    include: [Video],
+  });
   res.status(201).json({
     status: "Success",
-    Data:Data
+    Data: Data,
   });
 });
 exports.DeleteParanoidTableData = CatchAsync(async (req, res, next) => {
-  const comments = await ParanoidTable.destroy({
-    where: {
-      id: 1
-    }
+  const comments = await ParanoidTable.findAll({
   });
+  // const comments = await ParanoidTable.destroy({
+  //   where:{
+  //     id:1
+  //   }
+  // });
 
+
+  //-----get deleted Data
+  // const comments = await ParanoidTable.findAll({
+  //   paranoid:false
+  // });
+  //-----Restore ----- ///
+  // const comments = await ParanoidTable.restore({
+  //   where:{
+  //     id:1
+  //   }
+  // });
   res.status(201).json({
     status: "Success",
-    comments
+    comments,
   });
 });
 exports.loading = CatchAsync(async (req, res, next) => {
-//--------LazyLoading--------//
+  //--------LazyLoading--------//
   // let UsersData=await Users.findOne({
   //   where:{id:2}
   // })
   // let postData=await UsersData.getPosts()
 
-//--------EagerLoading--------//
-let UsersData=await Users.findOne({
-  include:[{
-    required:true,
-    model:Post
-  }],
-  where:{id:2}
-})
-let postData=await UsersData.getPosts()
+  //--------EagerLoading--------//
+  let UsersData = await Users.findOne({
+    include: [
+      {
+        required: true,
+        model: Post,
+      },
+    ],
+    where: { id: 2 },
+  });
+  let postData = await UsersData.getPosts();
   res.status(201).json({
     status: "Success",
     UsersData,
-    postData
+    postData,
   });
 });

@@ -143,3 +143,25 @@ exports.DeleteParanoidTableData = CatchAsync(async (req, res, next) => {
     comments
   });
 });
+exports.loading = CatchAsync(async (req, res, next) => {
+//--------LazyLoading--------//
+  // let UsersData=await Users.findOne({
+  //   where:{id:2}
+  // })
+  // let postData=await UsersData.getPosts()
+
+//--------EagerLoading--------//
+let UsersData=await Users.findOne({
+  include:[{
+    required:true,
+    model:Post
+  }],
+  where:{id:2}
+})
+let postData=await UsersData.getPosts()
+  res.status(201).json({
+    status: "Success",
+    UsersData,
+    postData
+  });
+});

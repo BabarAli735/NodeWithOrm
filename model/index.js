@@ -31,6 +31,7 @@ db.post_tags = require("./PostTags")(sequelize, DataTypes, db.posts, db.tags);
 db.comments=require("./Comment")(sequelize, DataTypes);
 db.image=require("./Image")(sequelize, DataTypes);
 db.video=require("./Video")(sequelize, DataTypes);
+db.paranoidTable=require("./ParanoidModel")(sequelize, DataTypes);
 db.users.addScope('checkStatus',{
   where:{
     status:1,

@@ -7,6 +7,7 @@ let Tags = db.tags;
 let Comments=db.comments
 let Image=db.image
 let Video=db.video
+let ParanoidTable=db.paranoidTable
 exports.createPost = CatchAsync(async (req, res, next) => {
   let data = await Post.create({
     name: "New Post",
@@ -88,13 +89,32 @@ exports.CheckActiveUserScope = CatchAsync(async (req, res, next) => {
   });
 });
 exports.Polymorphic = CatchAsync(async (req, res, next) => {
-  const comments = await Comments.findAll({
-    include: [Image, Video]
+  // const comments = await Comments.findAll({
+  //   include: [Image, Video],
+  // });
+  // for (const comment of comments) {
+  //   const message = `Found comment #${comment.id} with ${comment.commentableType} commentable:`;
+  //   console.log(message, comment.commentable.toJSON());
+  // }
+
+  const videoData=await Video.findAll({
+    include:[Comments]
+  })
+  // const imageData=await Image.findAll({
+  //   include:[Comments]
+  // })
+  res.status(201).json({
+    status: "Success",
+    videoData
   });
-  for (const comment of comments) {
-    const message = `Found comment #${comment.id} with ${comment.commentableType} commentable:`;
-    console.log(message, comment.commentable.toJSON());
-  }
+});
+exports.DeleteParanoidTableData = CatchAsync(async (req, res, next) => {
+  const comments = await ParanoidTable.destroy({
+    where: {
+      id: 1
+    }
+  });
+
   res.status(201).json({
     status: "Success",
     comments

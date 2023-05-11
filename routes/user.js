@@ -1,5 +1,5 @@
 const express = require("express");
-const { oneToone, createPost, oneBelongTo, oneToMany, manyToMany, CheckActiveUserScope, Polymorphic, DeleteParanoidTableData } = require("../controller/userController");
+const { oneToone, createPost, oneBelongTo, oneToMany, manyToMany, CheckActiveUserScope, Polymorphic, DeleteParanoidTableData, PolymorphicMany } = require("../controller/userController");
 const router = express.Router();
 //3 ROUTS
 //router.route('/MyOrder').get(getMyOrder)
@@ -10,5 +10,6 @@ router.get('/manyToMany',manyToMany)
 router.post('/createPost',createPost)
 router.get('/checkStatus',CheckActiveUserScope)
 router.get('/polymorphic',Polymorphic)
+router.get('/PolymorphicMany',PolymorphicMany)
 router.delete('/DeleteParanoidTableData',DeleteParanoidTableData)
 module.exports = router;

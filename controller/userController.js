@@ -108,6 +108,29 @@ exports.Polymorphic = CatchAsync(async (req, res, next) => {
     videoData
   });
 });
+exports.PolymorphicMany = CatchAsync(async (req, res, next) => {
+ 
+  // Image to Tag -------
+  // let Data=await Image.findAll({
+  //   include:[Tags]
+  // })
+  // Video to Tag -------
+  // let Data=await Video.findAll({
+  //   include:[Tags]
+  // })
+  // Tag to Image -------
+  // let Data=await Tags.findAll({
+  //   include:[Image]
+  // })
+  // Tag to Video -------
+  let Data=await Tags.findAll({
+    include:[Video]
+  })
+  res.status(201).json({
+    status: "Success",
+    Data:Data
+  });
+});
 exports.DeleteParanoidTableData = CatchAsync(async (req, res, next) => {
   const comments = await ParanoidTable.destroy({
     where: {

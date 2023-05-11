@@ -32,6 +32,7 @@ db.comments=require("./Comment")(sequelize, DataTypes);
 db.image=require("./Image")(sequelize, DataTypes);
 db.video=require("./Video")(sequelize, DataTypes);
 db.paranoidTable=require("./ParanoidModel")(sequelize, DataTypes);
+db.imageVideoTag=require("./ImageVideoTag")(sequelize, DataTypes);
 db.users.addScope('checkStatus',{
   where:{
     status:1,
@@ -91,6 +92,56 @@ db.posts.belongsTo(db.users.scope('checkStatus'));
 db.posts.belongsToMany(db.tags, { through: db.post_tags });
 db.tags.belongsToMany(db.posts, { through: db.post_tags });
 
+//PolymorphicMany--------------------/
+
+// Image To imageVideoTag
+db.image.belongsToMany(db.tags,{
+  through:{
+    model:db.imageVideoTag,
+    unique:false,
+    scope:{
+      tagableType:'image'
+    }
+  },
+  foreignKey:'tagableId',
+  constraints:false
+})
+// Tag To Image
+db.tags.belongsToMany(db.image,{
+  through:{
+    model:db.imageVideoTag,
+    unique:false,
+    scope:{
+      tagableType:'image'
+    }
+  },
+  foreignKey:'tagId',
+  constraints:false
+})
+// Video To Tag
+db.video.belongsToMany(db.tags,{
+  through:{
+    model:db.imageVideoTag,
+    unique:false,
+    scope:{
+      tagableType:'video'
+    }
+  },
+  foreignKey:'tagableId',
+  constraints:false
+})
+// Tag To Video
+db.tags.belongsToMany(db.video,{
+  through:{
+    model:db.imageVideoTag,
+    unique:false,
+    scope:{
+      tagableType:'video'
+    }
+  },
+  foreignKey:'tagId',
+  constraints:false
+})
 
 db.sequelize.sync({ force: false }).then((res) => {
   console.log("sync====");

@@ -1,4 +1,4 @@
-const { Sequelize } = require("sequelize");
+const { Sequelize, DataTypes } = require("sequelize");
 const db = require("../model");
 const CatchAsync = require("../utils/catcAsync");
 let Users = db.users;
@@ -195,7 +195,7 @@ exports.Transaction = CatchAsync(async (req, res, next) => {
     // );
     const user = await Users.findAll({
       transaction: t,
-      lock:true
+      lock: true,
     });
     console.log("====================================");
     console.log("COmmit");
@@ -218,17 +218,49 @@ exports.Transaction = CatchAsync(async (req, res, next) => {
   }
 });
 exports.Hooks = CatchAsync(async (req, res, next) => {
-    const user =await Users.create(
-      {
-        name: "Test1",
-        email: "Test2456789@yopmail.com",
-        password: "abcdefg",
-        gender: "male",
-      },
-    );
+  const user = await Users.create({
+    name: "Test1",
+    email: "Test2456789@yopmail.com",
+    password: "abcdefg",
+    gender: "male",
+  });
   res.status(202).json({
     status: "Success",
     Hooks: "Hooks",
-    user
+    user,
+  });
+});
+
+const QuaeryIntrface = db.sequelize.getQueryInterface();
+exports.QueryInterface = CatchAsync(async (req, res, next) => {
+  // let data=await QuaeryIntrface.createTable('avon',{
+  //   name:DataTypes.STRING
+  // });
+
+  //=======Add Column======//
+
+  // let data = await QuaeryIntrface.addColumn("avon", "email", {
+  //   type: DataTypes.STRING,
+  // });
+  //=======Alter======//
+
+  // let data = await QuaeryIntrface.changeColumn(
+  //   "avon",
+  //   "email",
+  //   {
+  //     type: DataTypes.TEXT,
+  //   }
+  // );
+  //=======Remove column ======//
+
+  // let data = await QuaeryIntrface.removeColumn("avon", "email");
+  
+  //=======Remove Table  ======//
+
+  let data = await QuaeryIntrface.dropTable("avon");
+  res.status(202).json({
+    status: "Success",
+    QueryInterface: "QueryInterface",
+    data,
   });
 });

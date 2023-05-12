@@ -1,3 +1,4 @@
+const { Sequelize } = require("sequelize");
 const db = require("../model");
 const CatchAsync = require("../utils/catcAsync");
 let Users = db.users;
@@ -131,14 +132,12 @@ exports.PolymorphicMany = CatchAsync(async (req, res, next) => {
   });
 });
 exports.DeleteParanoidTableData = CatchAsync(async (req, res, next) => {
-  const comments = await ParanoidTable.findAll({
-  });
+  const comments = await ParanoidTable.findAll({});
   // const comments = await ParanoidTable.destroy({
   //   where:{
   //     id:1
   //   }
   // });
-
 
   //-----get deleted Data
   // const comments = await ParanoidTable.findAll({
@@ -178,4 +177,43 @@ exports.loading = CatchAsync(async (req, res, next) => {
     UsersData,
     postData,
   });
+});
+exports.Transaction = CatchAsync(async (req, res, next) => {
+  let t = await db.sequelize.transaction();
+
+  try {
+    // const user =await Users.create(
+    //   {
+    //     name: "Test1",
+    //     email: "Test2@yopmail.com",
+    //     password: "abcdefg",
+    //     gender: "male",
+    //   },
+    //   {
+    //     transaction: t,
+    //   }
+    // );
+    const user = await Users.findAll({
+      transaction: t,
+      lock:true
+    });
+    console.log("====================================");
+    console.log("COmmit");
+    console.log("====================================");
+    t.commit();
+    res.status(201).json({
+      status: "Success",
+      Transaction: "Transaction Success",
+      user,
+    });
+  } catch (e) {
+    t.rollback();
+    console.log("====================================");
+    console.log("rollback");
+    console.log("====================================");
+    res.status(404).json({
+      status: "SFail",
+      Transaction: "Transaction fail",
+    });
+  }
 });

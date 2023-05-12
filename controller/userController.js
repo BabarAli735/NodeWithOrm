@@ -217,3 +217,18 @@ exports.Transaction = CatchAsync(async (req, res, next) => {
     });
   }
 });
+exports.Hooks = CatchAsync(async (req, res, next) => {
+    const user =await Users.create(
+      {
+        name: "Test1",
+        email: "Test2456789@yopmail.com",
+        password: "abcdefg",
+        gender: "male",
+      },
+    );
+  res.status(202).json({
+    status: "Success",
+    Hooks: "Hooks",
+    user
+  });
+});

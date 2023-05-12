@@ -11,6 +11,7 @@ const {
   PolymorphicMany,
   loading,
   Transaction,
+  Hooks,
 } = require("../controller/userController");
 const router = express.Router();
 //3 ROUTS
@@ -25,5 +26,6 @@ router.get("/polymorphic", Polymorphic);
 router.get("/PolymorphicMany", PolymorphicMany);
 router.get("/loading", loading);
 router.get("/Transaction", Transaction);
+router.get("/Hooks", Hooks);
 router.delete("/DeleteParanoidTableData", DeleteParanoidTableData);
 module.exports = router;
